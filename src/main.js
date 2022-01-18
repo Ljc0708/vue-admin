@@ -4,6 +4,10 @@ import router from "./router";
 import store from "./store";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
+import * as ELIcons from "@element-plus/icons-vue";
 
-createApp(App).use(ElementPlus);
-createApp(App).use(store).use(router).mount("#app");
+const app = createApp(App);
+for (let iconName in ELIcons) {
+  app.component(iconName, ELIcons[iconName]);
+}
+app.use(store).use(router).use(ElementPlus).mount("#app");
