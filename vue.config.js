@@ -31,7 +31,7 @@ module.exports = {
       // string | Object
       "/api": {
         /* 目标代理服务器地址 */
-        target: "http://192.168.100.117:8080/",
+        target: "http://192.168.100.118:8085/",
         /* 允许跨域 */
         changeOrigin: true,
         pathRewrite: {

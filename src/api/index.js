@@ -1,5 +1,6 @@
 import Env from "./env";
 import axios from "axios";
+import { ElMessage } from "element-plus";
 //导入Nprogress css和js
 // import Nprogress from "nprogress";
 // import "nprogress/nprogress.css";
@@ -34,6 +35,9 @@ axios.interceptors.request.use(
 );
 //添加一个响应拦截器
 axios.interceptors.response.use((response) => {
+  if (response.data.status == 207) {
+    return ElMessage.error(response.data.message);
+  }
   // Nprogress.done();
   return response;
 });

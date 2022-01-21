@@ -39,40 +39,56 @@
   </div>
 </template>
 <script>
+import { useRouter } from "vue-router";
+import { reactive, ref } from "@vue/reactivity";
+import { ElMessage } from "element-plus";
 import API from "../../api/api_user";
 export default {
-  data() {
-    return {
-      param: {
-        // userName: "",
-        // password: "",
-        userName: "",
-        password: "",
-      },
-      rules: {
-        userName: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
-        ],
-        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
-      },
-    };
-  },
-  created() {},
-  methods: {
-    submitForm() {
-      this.$refs.login.validate((val) => {
+  name: "login",
+  setup() {
+    /*路由跳转*/
+    const router = useRouter();
+    /*数据*/
+    // 用户名密码
+    const param = reactive({
+      userName: "",
+      password: "",
+    });
+    const login = ref();
+    // 校验
+    const rules = reactive({
+      userName: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+      password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+    });
+    /*方法*/
+    // 点击登录
+    const submitForm = () => {
+      login.value.validate((val) => {
         if (!val) {
-          return this.$message.error("请填写");
+          return ElMessage.error("请输入");
         } else {
-          var loginFrom = new FormData();
-          loginFrom.append("userName", this.param.userName.trim());
-          loginFrom.append("password", this.param.password.trim());
+          let loginFrom = new FormData();
+          loginFrom.append("userName", param.userName.trim());
+          loginFrom.append("password", param.password.trim());
           API.login(loginFrom).then((res) => {
-            console.log(res);
+            ElMessage.success(res.message);
+            if (res.status == 1) {
+              router.push({
+                name: "Home",
+              });
+              sessionStorage.setItem("token", res.token); //登录成功之后把token存在sessionStorage中
+              return;
+            }
           });
         }
       });
-    },
+    };
+    return {
+      param,
+      rules,
+      login,
+      submitForm,
+    };
   },
 };
 </script>
